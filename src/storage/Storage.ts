@@ -1,6 +1,11 @@
 /**
+ * This class is a wrapper for the Capacitor Preferences API.
+ * The goal is to simplify and abstract common storage operations for IGN mobile applications.
  * 
  * See Capacitor documentation: https://capacitorjs.com/docs/apis/preferences
+ * 
+ * Note:
+ * - It might add some complexity for no reason - we could just user Preferences API directly
  */
 
 import { Preferences } from '@capacitor/preferences';

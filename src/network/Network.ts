@@ -5,16 +5,16 @@
  * See Capacitor documentation: https://capacitorjs.com/docs/apis/network
  */
 
-import { ConnectionStatus, ConnectionType, Network } from '@capacitor/network';
+import { ConnectionStatus, ConnectionType, Network as CapacitorNetwork } from '@capacitor/network';
 
-export default class Networks {
+export default class Network {
 
   /**
    * Check if the device is connected to the network
    * @returns True if the device is connected to the network, false otherwise
    */
   public static async isConnected(): Promise<boolean> {
-    return await Network.getStatus().then(status => status.connected);
+    return await CapacitorNetwork.getStatus().then(status => status.connected);
   }
 
   /**
@@ -23,7 +23,7 @@ export default class Networks {
    * @returns The type of connection the device is using
    */
   public static async getConnectionType(): Promise<ConnectionType> {
-    return await Network.getStatus().then(status => status.connectionType);
+    return await CapacitorNetwork.getStatus().then(status => status.connectionType);
   }
 
   /**
@@ -34,7 +34,7 @@ export default class Networks {
    * @returns The status of the network connection
    */
   public static async getStatus(): Promise<ConnectionStatus> {
-    return await Network.getStatus();
+    return await CapacitorNetwork.getStatus();
   }
 
 }
