@@ -3,12 +3,30 @@
  * Capacitor device API wrappers for IGN mobile applications
  */
 
-// TODO: Export your modules here as you create them
-// Example structure:
-// export { FileSystem } from './filesystem/FileSystem';
-// export { Camera } from './camera/Camera'; // maybe to skip
+// Export classes
 export { default as Storage } from './storage/Storage';
 export { default as Device } from './device/Device';
 export { default as Network } from './network/Network';
 export { default as FileSystem } from './filesystem/FileSystem';
-// export * from './types';
+
+// Export types for FileSystem
+export type {
+  FileSystemDirectory,
+  FileEncoding,
+  FileSystemReadOptions,
+  FileSystemWriteOptions,
+  FileSystemAppendOptions,
+  FileSystemDeleteOptions,
+  FileSystemCreateDirectoryOptions,
+  FileSystemRemoveDirectoryOptions,
+  FileSystemListOptions,
+  FileSystemCopyOptions,
+  FileSystemRenameOptions,
+  FileSystemStatOptions,
+  FileSystemGetUriOptions,
+  FileSystemMetadata,
+  FileSystemEntrySummary,
+} from './filesystem/types';
+
+// Export types for Network (if any exist in Network.ts)
+// Add other type exports as needed when you add more modules
