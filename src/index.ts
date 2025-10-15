@@ -27,6 +27,3 @@ export type {
   FileSystemMetadata,
   FileSystemEntrySummary,
 } from './filesystem/types';
-
-// Export types for Network (if any exist in Network.ts)
-// Add other type exports as needed when you add more modules
