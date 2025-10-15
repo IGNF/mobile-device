@@ -97,16 +97,3 @@ export interface FileSystemEntrySummary {
   isDirectory: boolean;
   size?: number;
 }
-
-export interface FileSystemReadFileInChunksOptions {
-  path: string;
-  directory?: FileSystemDirectory;
-  encoding?: FileEncoding;
-  chunkSize: number;
-}
-
-export interface FileSystemDownloadFileOptions {
-  url: string;
-  targetPath: string;
-  directory?: FileSystemDirectory;
-}
