@@ -22,6 +22,9 @@ export default class FileSystem {
      */
     private static readonly ENCODING_MAP;
     private static getCapacitorDirectory;
+    private static getCapacitorEncoding;
+    private static stripDataUrlPrefix;
+    private static blobToBase64;
     /**
      * Check current file system permissions (Android scoped storage).
      */

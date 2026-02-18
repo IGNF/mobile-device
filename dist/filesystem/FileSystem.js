@@ -11,6 +11,24 @@ class FileSystem {
         const directory = optionDirectory || this.defaultDirectory;
         return this.DIRECTORY_MAP[directory];
     }
+    static getCapacitorEncoding(encoding) {
+        if (!encoding || encoding === 'base64') {
+            return undefined;
+        }
+        return this.ENCODING_MAP[encoding];
+    }
+    static stripDataUrlPrefix(data) {
+        return data.includes(',') ? data.split(',')[1] : data;
+    }
+    static async blobToBase64(blob) {
+        const bytes = new Uint8Array(await blob.arrayBuffer());
+        let binary = '';
+        const chunkSize = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+            binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+        }
+        return btoa(binary);
+    }
     /**
      * Check current file system permissions (Android scoped storage).
      */
@@ -32,13 +50,20 @@ class FileSystem {
         // Use default directory if none provided
         const capacitorDirectory = this.getCapacitorDirectory(options.directory);
         // Convert string-based types to Capacitor enum types
-        const capacitorEncoding = options.encoding ? this.ENCODING_MAP[options.encoding] : undefined;
+        const capacitorEncoding = this.getCapacitorEncoding(options.encoding);
         const result = await CapacitorFilesystem.readFile({
             path: options.path,
             directory: capacitorDirectory,
             encoding: capacitorEncoding,
         });
-        return typeof result.data === 'string' ? result.data : await result.data.text();
+        if (typeof result.data === 'string') {
+            return options.encoding === 'base64'
+                ? this.stripDataUrlPrefix(result.data)
+                : result.data;
+        }
+        return options.encoding === 'base64'
+            ? await this.blobToBase64(result.data)
+            : await result.data.text();
     }
     /**
      * Write data to a file, creating parent directories when needed.
@@ -46,10 +71,13 @@ class FileSystem {
     static async writeFile(options) {
         // Use default directory if none provided
         const capacitorDirectory = this.getCapacitorDirectory(options.directory);
-        const capacitorEncoding = options.encoding ? this.ENCODING_MAP[options.encoding] : undefined;
+        const capacitorEncoding = this.getCapacitorEncoding(options.encoding);
+        const data = typeof options.data === 'string' && options.encoding === 'base64'
+            ? this.stripDataUrlPrefix(options.data)
+            : options.data;
         const result = await CapacitorFilesystem.writeFile({
             path: options.path,
-            data: options.data,
+            data,
             directory: capacitorDirectory,
             encoding: capacitorEncoding,
             recursive: options.recursive, // create any missing parent directories if true
@@ -63,10 +91,13 @@ class FileSystem {
         // Use default directory if none provided
         const capacitorDirectory = this.getCapacitorDirectory(options.directory);
         // Convert string-based types to Capacitor enum types
-        const capacitorEncoding = options.encoding ? this.ENCODING_MAP[options.encoding] : undefined;
+        const capacitorEncoding = this.getCapacitorEncoding(options.encoding);
+        const data = typeof options.data === 'string'
+            ? (options.encoding === 'base64' ? this.stripDataUrlPrefix(options.data) : options.data)
+            : await this.blobToBase64(options.data);
         await CapacitorFilesystem.appendFile({
             path: options.path,
-            data: options.data,
+            data,
             directory: capacitorDirectory,
             encoding: capacitorEncoding,
         });
@@ -261,7 +292,6 @@ FileSystem.ENCODING_MAP = {
     utf8: Encoding.UTF8,
     ascii: Encoding.ASCII,
     utf16: Encoding.UTF16,
-    base64: Encoding.UTF8, // Capacitor doesn't have base64, use UTF8 as fallback
 };
 export default FileSystem;
 //# sourceMappingURL=FileSystem.js.map
