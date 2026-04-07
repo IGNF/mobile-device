@@ -4,6 +4,7 @@
  *
  * See Capacitor documentation: https://capacitorjs.com/docs/apis/network
  */
+import { PluginListenerHandle } from '@capacitor/core';
 import { ConnectionStatus, ConnectionType } from '@capacitor/network';
 export default class Network {
     /**
@@ -25,5 +26,16 @@ export default class Network {
      * @returns The status of the network connection
      */
     static getStatus(): Promise<ConnectionStatus>;
+    /**
+     * Watch for changes in the network connection
+     * @param callback The callback to call when the network connection changes
+     * @returns The listener handle
+     */
+    static watch(callback: (status: ConnectionStatus) => void): Promise<PluginListenerHandle>;
+    /**
+     * Unwatch for changes in the network connection
+     * @param listener The listener to unsubscribe from
+     */
+    static unwatch(listener: PluginListenerHandle): Promise<void>;
 }
 //# sourceMappingURL=Network.d.ts.map

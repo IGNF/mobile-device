@@ -31,5 +31,22 @@ export default class Network {
     static async getStatus() {
         return await CapacitorNetwork.getStatus();
     }
+    /**
+     * Watch for changes in the network connection
+     * @param callback The callback to call when the network connection changes
+     * @returns The listener handle
+     */
+    static async watch(callback) {
+        return await CapacitorNetwork.addListener('networkStatusChange', (status) => {
+            callback(status);
+        });
+    }
+    /**
+     * Unwatch for changes in the network connection
+     * @param listener The listener to unsubscribe from
+     */
+    static async unwatch(listener) {
+        await listener.remove();
+    }
 }
 //# sourceMappingURL=Network.js.map
